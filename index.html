@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Asya Klio | Art & AI Design</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,700;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --text-color: #F4F7F5; 
+            --accent-sage: #B4D6BC; 
+            --accent-gold: #F1DBB3; 
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(180deg, #246B46 0%, #163E2A 35%, #0B1C14 100%);
+            background-attachment: fixed; 
+            color: var(--text-color);
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        /* === КИНЕМАТОГРАФИЧЕСКОЕ ИНТРО (ТРЕЙЛЕР) === */
+        .intro-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            background-color: #060E0B; /* Глубокая полная темнота на старте */
+            z-index: 10000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 1.2s cubic-bezier(0.25, 1, 0.5, 1), pointer-events 1.2s;
+            padding: 0 20px;
+            text-align: center;
+        }
+
+        .intro-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 3rem;
+            font-weight: 400;
+            color: var(--text-color);
+            opacity: 0;
+            transform: scale(0.96) translateY(10px);
+            transition: opacity 1.5s ease, transform 1.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+            margin-bottom: 15px;
+            letter-spacing: 1px;
+        }
+
+        .intro-subtitle {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            color: var(--accent-gold);
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 1.5s ease 0.8s, transform 1.5s cubic-bezier(0.165, 0.84, 0.44, 1) 0.8s;
+        }
+
+        /* Кнопка пропуска интро */
+        .skip-intro {
+            position: absolute;
+            bottom: 40px;
+            right: 40px;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: rgba(255,255,255,0.4);
+            cursor: pointer;
+            border: none;
+            background: none;
+            transition: color 0.3s;
+        }
+        .skip-intro:hover {
+            color: var(--accent-sage);
+        }
+
+        /* Класс для плавного исчезновения всего экрана интро */
+        .intro-overlay.fade-out {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* === КОНТЕНТ САЙТА (ПЛАВНЫЙ СТАРТ ПОСЛЕ ИНТРО) === */
+        .main-content {
+            opacity: 0;
+            transition: opacity 1.5s ease-out 0.5s;
+        }
+        .main-content.visible {
+            opacity: 1;
+        }
+
+        /* ИНТЕРЬЕРНЫЕ БЛИКИ НА ФОНЕ */
+        .blur-bg {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: -1;
+            overflow: hidden;
+            filter: blur(140px);
+            opacity: 0.5;
+        }
+
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            animation: float 22s infinite alternate;
+        }
+
+        .blob1 { width: 550px; height: 550px; top: -10%; left: -5%; background: #398F5A; } 
+        .blob2 { width: 600px; height: 600px; bottom: -15%; right: -10%; background: #07150E; animation-delay: -5s; }
+        .blob3 { width: 450px; height: 450px; top: 30%; left: 55%; background: #205337; animation-delay: -10s; }
+
+        @keyframes float {
+            0% { transform: translate(0px, 0px) scale(1); }
+            50% { transform: translate(30px, 40px) scale(1.05); }
+            100% { transform: translate(-20px, -20px) scale(0.95); }
+        }
+
+        section {
+            padding: 140px 10%;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        h1, h2 {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 500;
+            line-height: 1.15;
+        }
+
+        /* ПЛАВНОЕ ПРОЯВЛЕНИЕ ЭЛЕМЕНТОВ ПРИ СКРОЛЛЕ */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.9s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* === 1. ГЛАВНЫЙ ЭКРАН === */
+        .hero h1 {
+            font-size: 4.5rem;
+            max-width: 900px;
+            margin-bottom: 30px;
+        }
+
+        .hero h1 span {
+            font-style: italic;
+            font-family: 'Cormorant Garamond', serif;
+            color: var(--accent-gold);
+            border-bottom: 2px solid rgba(241, 219, 179, 0.3);
+        }
+
+        .hero-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            width: 100%;
+            margin-top: 40px;
+            border-top: 1px solid rgba(255,255,255,0.15);
+            padding-top: 30px;
+        }
+
+        .hero-desc {
+            font-size: 1.05rem;
+            max-width: 450px;
+            color: #E2EFE5;
+            line-height: 1.7;
+        }
+
+        .hero-tag {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: var(--accent-sage);
+        }
+
+        /* === 2. БЛОК О СЕБЕ === */
+        .about {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 80px;
+            align-items: center;
+        }
+
+        .photo-container {
+            position: relative;
+        }
+
+        .photo-mask {
+            width: 100%;
+            max-width: 380px;
+            aspect-ratio: 4/5;
+            border-radius: 40px;
+            overflow: hidden;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .photo-mask img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.8s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+
+        .photo-container:hover .photo-mask img {
+            transform: scale(1.04);
+        }
+
+        .about-content h2 {
+            font-size: 3.5rem;
+            margin-bottom: 30px;
+        }
+
+        .about-content h2 span {
+            font-style: italic;
+            color: var(--accent-gold);
+        }
+
+        .about-text {
+            font-size: 1.05rem;
+            line-height: 1.8;
+            color: #EDF5F0;
+            margin-bottom: 25px;
+        }
+
+        /* === 3. ПОРТФОЛИО === */
+        .portfolio h2 {
+            font-size: 3.5rem;
+            margin-bottom: 60px;
+        }
+
+        .portfolio-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 50px 40px;
+        }
+
+        .project-card {
+            text-decoration: none;
+            color: inherit;
+            display: block;
+            cursor: pointer;
+        }
+
+        .img-holder {
+            width: 100%;
+            aspect-ratio: 16/11;
+            border-radius: 20px;
+            overflow: hidden;
+            background-color: #1A3E2B;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255,255,255,0.08);
+            transition: transform 0.5s cubic-bezier(0.165, 0.84, 0.44, 1), box-shadow 0.5s ease;
+        }
+
+        .img-holder img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.7s ease;
+        }
+
+        .project-card:hover .img-holder {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(57, 143, 90, 0.25);
+        }
+
+        .project-card:hover .img-holder img {
+            transform: scale(1.03);
+        }
+
+        .project-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+        }
+
+        .project-meta h3 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.15rem;
+            font-weight: 500;
+        }
+
+        .project-meta span {
+            font-size: 0.8rem;
+            color: var(--accent-sage);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* === СТИЛИ ДЛЯ УВЕЛИЧЕНИЯ КАРТИНКИ (ЛАЙТБОКС) === */
+        .lightbox {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            background-color: rgba(7, 21, 14, 0.94); 
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+
+        .lightbox.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .lightbox img {
+            max-width: 85%;
+            max-height: 85%;
+            border-radius: 16px;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.7);
+            transform: scale(0.85); 
+            transition: transform 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+
+        .lightbox.active img {
+            transform: scale(1);
+        }
+
+        /* === 4. КОНТАКТЫ === */
+        .contact {
+            text-align: center;
+            align-items: center;
+            padding: 160px 10%;
+        }
+
+        .contact h2 {
+            font-size: 4.5rem;
+            margin-bottom: 30px;
+        }
+
+        .contact p {
+            font-size: 1.2rem;
+            color: #E2EFE5;
+            margin-bottom: 50px;
+            max-width: 500px;
+            line-height: 1.6;
+        }
+
+        .contact-group {
+            display: flex;
+            gap: 25px;
+            margin-bottom: 60px;
+        }
+
+        .creative-btn {
+            padding: 18px 45px;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-decoration: none;
+            color: var(--text-color);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 100px;
+            transition: all 0.4s ease;
+            background: rgba(255, 255, 255, 0.04);
+            backdrop-filter: blur(5px);
+        }
+
+        .creative-btn:hover {
+            border-color: var(--text-color);
+            background: var(--text-color);
+            color: #163E2A;
+            transform: scale(1.03);
+        }
+
+        .creative-btn.primary {
+            background: var(--accent-sage);
+            border-color: var(--accent-sage);
+            color: #0B1C14;
+            font-weight: 500;
+        }
+
+        .creative-btn.primary:hover {
+            background: transparent;
+            color: var(--accent-sage);
+        }
+
+        .mail-box {
+            font-size: 0.85rem;
+            letter-spacing: 2px;
+            color: var(--accent-sage);
+            text-transform: uppercase;
+        }
+
+        .mail-box span {
+            color: var(--text-color);
+            margin-left: 5px;
+            font-weight: 500;
+        }
+
+        @media (max-width: 900px) {
+            .about { grid-template-columns: 1fr; gap: 40px; text-align: center; }
+            .photo-mask { margin: 0 auto; }
+            .hero h1, .about-content h2, .portfolio h2, .contact h2 { font-size: 2.8rem; }
+            .hero-info { flex-direction: column; align-items: center; gap: 20px; text-align: center; }
+            .contact-group { flex-direction: column; width: 100%; }
+            section { padding: 80px 5%; }
+            .intro-title { font-size: 2rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="intro-overlay" id="intro">
+        <div class="intro-title" id="intro-t1">Asya Klio</div>
+        <div class="intro-subtitle" id="intro-t2">Digital Art & Design Studio</div>
+        <button class="skip-intro" onclick="closeIntro()">Пропустить</button>
+    </div>
+
+    <div class="main-content" id="site-content">
+        
+        <div class="blur-bg">
+            <div class="blob blob1"></div>
+            <div class="blob blob2"></div>
+            <div class="blob blob3"></div>
+        </div>
+
+        <div class="lightbox" id="lightbox">
+            <img src="" alt="Увеличенный просмотр" id="lightbox-img">
+        </div>
+
+        <section class="hero">
+            <div class="hero-tag">Asya Klio // Portfolio</div>
+            <h1>Создаю визуальные миры, где маркетинг встречает <span>чистое искусство</span> и технологии ИИ</h1>
+            
+            <div class="hero-info">
+                <p class="hero-desc">Дизайн упаковки, премиальная айдентика и умная инфографика нового поколения, созданная на стыке человеческого вкуса и нейросетей.</p>
+            </div>
+        </section>
+
+        <section class="about">
+            <div class="photo-container reveal">
+                <div class="photo-mask">
+                    <img src="images/3.jpg" alt="Asya Klio">
+                </div>
+            </div>
+            <div class="about-content reveal">
+                <h2>Привет, я <span>Ася</span></h2>
+                <p class="about-text">
+                    Я графический дизайнер с глубоким пониманием эстетики. Моя суперсила — чувствовать ДНК бренда и передавать её через форму, цвет и шрифты. 
+                </p>
+                <p class="about-text" style="color: #E2EFE5;">
+                    Я активно интегрирую в работу генеративные инструменты искусственного интеллекта. Это позволяет создавать уникальный, сказочный и недосягаемый для конкурентов контент, сохраняя при этом живую, теплую человеческую концепцию.
+                </p>
+            </div>
+        </section>
+
+        <section class="portfolio">
+            <h2 class="reveal">Избранные кейсы</h2>
+            <div class="portfolio-grid reveal" id="projects-container">
+                </div>
+        </section>
+
+        <section class="contact reveal">
+            <h2>Давайте создавать истории</h2>
+            <p>Если вам нужен дизайн, который вызывает эмоции и поднимает ценность продукта — напишите мне.</p>
+            
+            <div class="contact-group">
+                <a href="https://web.telegram.org/k/#@Klio_As5" target="_blank" class="creative-btn primary">Telegram</a>
+                <a href="https://www.instagram.com/ai.booksklio?igsh=MTcxc2tkbjNhMTJkeA==" target="_blank" class="creative-btn">Instagram</a>
+            </div>
+
+            <div class="mail-box">
+                Прямая связь: <span>alex.mak@mail.ru</span>
+            </div>
+        </section>
+        
+    </div>
+
+    <script>
+        // Сценарий кинематографического интро
+        window.addEventListener('DOMContentLoaded', () => {
+            const t1 = document.getElementById('intro-t1');
+            const t2 = document.getElementById('intro-t2');
+            
+            // Запускаем появление текста с эффектом кинотитров
+            setTimeout(() => {
+                t1.style.opacity = '1';
+                t1.style.transform = 'scale(1) translateY(0)';
+            }, 400);
+
+            setTimeout(() => {
+                t2.style.opacity = '1';
+                t2.style.transform = 'translateY(0)';
+            }, 1000);
+
+            // Автоматически закрываем интро через 3.2 секунды
+            setTimeout(closeIntro, 3200);
+        });
+
+        function closeIntro() {
+            const intro = document.getElementById('intro');
+            const content = document.getElementById('site-content');
+            
+            intro.classList.add('fade-out');
+            content.classList.add('visible');
+            
+            // Запускаем триггер проверки скролла, чтобы первый экран отработал корректно
+            setTimeout(revealElements, 200);
+        }
+
+        // БАЗА ДАННЫХ КЕЙСОВ
+        const myProjects = [
+            { image: 'auris.jpg', title: 'Auris Headphones',  tag: 'Инфографика / AI Концепт' },
+            { image: '2.jpg',     title: 'Aurélie Jewelry',   tag: 'Премиум Айдентика' },
+            { image: '4.jpg',     title: 'Klio Sneakers',     tag: 'Промо-арт & Motion' },
+            { image: '5.jpg',     title: 'Персональные Сказки', tag: 'Иллюстрации / Generation' }
+        ];
+
+        const container = document.getElementById('projects-container');
+        myProjects.forEach(project => {
+            container.innerHTML += `
+                <div class="project-card" onclick="openLightbox('images/${project.image}')">
+                    <div class="img-holder">
+                        <img src="images/${project.image}" alt="${project.title}">
+                    </div>
+                    <div class="project-meta">
+                        <h3>${project.title}</h3>
+                        <span>${project.tag}</span>
+                    </div>
+                </div>
+            `;
+        });
+
+        // АНИМАЦИЯ ПОЯВЛЕНИЯ ПРИ СКРОЛЛЕ (SCROLL REVEAL)
+        function revealElements() {
+            const reveals = document.querySelectorAll('.reveal');
+            reveals.forEach(element => {
+                const windowHeight = window.innerHeight;
+                const elementTop = element.getBoundingClientRect().top;
+                const elementVisible = 100; 
+
+                if (elementTop < windowHeight - elementVisible) {
+                    element.classList.add('active');
+                }
+            });
+        }
+        window.addEventListener('scroll', revealElements);
+
+        // СКРИПТ ОТКРЫТИЯ И ЗАКРЫТИЯ ЛАЙТБОКСА
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImg = document.getElementById('lightbox-img');
+
+        function openLightbox(imageSrc) {
+            lightboxImg.src = imageSrc;
+            lightbox.classList.add('active');
+        }
+
+        lightbox.addEventListener('click', () => {
+            lightbox.classList.remove('active');
+        });
+    </script>
+</body>
+</html>
