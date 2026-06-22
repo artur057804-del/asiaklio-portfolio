@@ -23,6 +23,7 @@
 
         body {
             font-family: 'Montserrat', sans-serif;
+            background: #163E2A;
             background: linear-gradient(180deg, #246B46 0%, #163E2A 35%, #0B1C14 100%);
             background-attachment: fixed; 
             color: var(--text-color);
@@ -30,18 +31,18 @@
             scroll-behavior: smooth;
         }
 
-        /* === КИНЕМАТОГРАФИЧЕСКОЕ ИНТРО (ТРЕЙЛЕР) === */
+        /* === ИНТРО === */
         .intro-overlay {
             position: fixed;
             top: 0; left: 0;
             width: 100vw; height: 100vh;
-            background-color: #060E0B; /* Глубокая полная темнота на старте */
+            background-color: #060E0B;
             z-index: 10000;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            transition: opacity 1.2s cubic-bezier(0.25, 1, 0.5, 1), pointer-events 1.2s;
+            transition: opacity 1.2s ease, pointer-events 1.2s;
             padding: 0 20px;
             text-align: center;
         }
@@ -53,7 +54,7 @@
             color: var(--text-color);
             opacity: 0;
             transform: scale(0.96) translateY(10px);
-            transition: opacity 1.5s ease, transform 1.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+            transition: opacity 1.5s ease, transform 1.5s ease;
             margin-bottom: 15px;
             letter-spacing: 1px;
         }
@@ -66,10 +67,9 @@
             color: var(--accent-gold);
             opacity: 0;
             transform: translateY(10px);
-            transition: opacity 1.5s ease 0.8s, transform 1.5s cubic-bezier(0.165, 0.84, 0.44, 1) 0.8s;
+            transition: opacity 1.5s ease 0.8s, transform 1.5s ease 0.8s;
         }
 
-        /* Кнопка пропуска интро */
         .skip-intro {
             position: absolute;
             bottom: 40px;
@@ -87,45 +87,48 @@
             color: var(--accent-sage);
         }
 
-        /* Класс для плавного исчезновения всего экрана интро */
         .intro-overlay.fade-out {
             opacity: 0;
             pointer-events: none;
         }
 
-        /* === КОНТЕНТ САЙТА (ПЛАВНЫЙ СТАРТ ПОСЛЕ ИНТРО) === */
+        /* === КОНТЕНТ === */
         .main-content {
             opacity: 0;
             transition: opacity 1.5s ease-out 0.5s;
+            will-change: opacity;
         }
         .main-content.visible {
             opacity: 1;
         }
 
-        /* ИНТЕРЬЕРНЫЕ БЛИКИ НА ФОНЕ */
         .blur-bg {
             position: fixed;
             top: 0; left: 0; width: 100vw; height: 100vh;
             z-index: -1;
             overflow: hidden;
-            filter: blur(140px);
-            opacity: 0.5;
+            opacity: 0.4;
+            pointer-events: none;
+            transform: translate3d(0, 0, 0);
+            will-change: transform;
         }
 
         .blob {
             position: absolute;
             border-radius: 50%;
-            animation: float 22s infinite alternate;
+            animation: float 25s infinite alternate ease-in-out;
+            filter: blur(80px);
+            will-change: transform;
         }
 
-        .blob1 { width: 550px; height: 550px; top: -10%; left: -5%; background: #398F5A; } 
-        .blob2 { width: 600px; height: 600px; bottom: -15%; right: -10%; background: #07150E; animation-delay: -5s; }
-        .blob3 { width: 450px; height: 450px; top: 30%; left: 55%; background: #205337; animation-delay: -10s; }
+        .blob1 { width: 400px; height: 400px; top: -5%; left: -5%; background: #398F5A; } 
+        .blob2 { width: 450px; height: 450px; bottom: -10%; right: -10%; background: #07150E; animation-delay: -5s; }
+        .blob3 { width: 320px; height: 320px; top: 30%; left: 60%; background: #205337; animation-delay: -10s; }
 
         @keyframes float {
-            0% { transform: translate(0px, 0px) scale(1); }
-            50% { transform: translate(30px, 40px) scale(1.05); }
-            100% { transform: translate(-20px, -20px) scale(0.95); }
+            0% { transform: translate3d(0, 0, 0) scale(1); }
+            50% { transform: translate3d(20px, 30px, 0) scale(1.02); }
+            100% { transform: translate3d(-15px, -15px, 0) scale(0.98); }
         }
 
         section {
@@ -142,18 +145,17 @@
             line-height: 1.15;
         }
 
-        /* ПЛАВНОЕ ПРОЯВЛЕНИЕ ЭЛЕМЕНТОВ ПРИ СКРОЛЛЕ */
         .reveal {
             opacity: 0;
             transform: translateY(30px);
-            transition: all 0.9s cubic-bezier(0.165, 0.84, 0.44, 1);
+            transition: all 0.9s ease;
         }
         .reveal.active {
             opacity: 1;
             transform: translateY(0);
         }
 
-        /* === 1. ГЛАВНЫЙ ЭКРАН === */
+        /* === ГЛАВНЫЙ ЭКРАН === */
         .hero h1 {
             font-size: 4.5rem;
             max-width: 900px;
@@ -191,7 +193,7 @@
             color: var(--accent-sage);
         }
 
-        /* === 2. БЛОК О СЕБЕ === */
+        /* === О СЕБЕ === */
         .about {
             display: grid;
             grid-template-columns: 1fr 1.2fr;
@@ -217,7 +219,7 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: transform 0.8s cubic-bezier(0.165, 0.84, 0.44, 1);
+            transition: transform 0.8s ease;
         }
 
         .photo-container:hover .photo-mask img {
@@ -241,84 +243,268 @@
             margin-bottom: 25px;
         }
 
-        /* === 3. ПОРТФОЛИО === */
+        /* === ПОРТФОЛИО === */
         .portfolio h2 {
             font-size: 3.5rem;
-            margin-bottom: 60px;
+            margin-bottom: 50px;
+        }
+
+        .portfolio-section {
+            margin-bottom: 80px;
+            border-top: 1px solid rgba(255, 255, 255, 0.15);
+            padding-top: 40px;
+        }
+
+        .portfolio-section h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2.5rem;
+            font-weight: 400;
+            letter-spacing: 1px;
+            color: var(--accent-sage);
+            margin-bottom: 15px;
+        }
+
+        .section-intro-text {
+            font-size: 1rem;
+            color: #A3C3AD;
+            margin-bottom: 40px;
+            max-width: 650px;
+            line-height: 1.6;
         }
 
         .portfolio-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-            gap: 50px 40px;
+            gap: 60px 40px;
         }
 
         .project-card {
-            text-decoration: none;
-            color: inherit;
-            display: block;
-            cursor: pointer;
+            display: flex;
+            flex-direction: column;
         }
 
         .img-holder {
             width: 100%;
-            aspect-ratio: 16/11;
+            height: 480px; 
             border-radius: 20px;
             overflow: hidden;
             background-color: #1A3E2B;
             margin-bottom: 20px;
             border: 1px solid rgba(255,255,255,0.08);
-            transition: transform 0.5s cubic-bezier(0.165, 0.84, 0.44, 1), box-shadow 0.5s ease;
+            transition: transform 0.5s ease, box-shadow 0.5s ease;
+            cursor: pointer;
+            position: relative;
         }
 
-        .img-holder img {
+        .img-holder img, .img-holder video {
             width: 100%;
             height: 100%;
-            object-fit: cover;
-            transition: transform 0.7s ease;
+            object-fit: cover; 
+            object-position: center center;
         }
 
         .project-card:hover .img-holder {
-            transform: translateY(-8px);
-            box-shadow: 0 20px 40px rgba(57, 143, 90, 0.25);
-        }
-
-        .project-card:hover .img-holder img {
-            transform: scale(1.03);
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(57, 143, 90, 0.2);
         }
 
         .project-meta {
             display: flex;
             justify-content: space-between;
-            align-items: baseline;
+            align-items: center;
+            margin-bottom: 10px;
         }
 
-        .project-meta h3 {
+        .project-meta h4 {
             font-family: 'Montserrat', sans-serif;
-            font-size: 1.15rem;
+            font-size: 1.2rem;
             font-weight: 500;
         }
 
-        .project-meta span {
+        .more-btn {
             font-size: 0.8rem;
-            color: var(--accent-sage);
             text-transform: uppercase;
             letter-spacing: 1px;
+            color: var(--accent-gold);
+            background: none;
+            border: none;
+            border-bottom: 1px dashed var(--accent-gold);
+            cursor: pointer;
+            padding-bottom: 2px;
+            transition: color 0.3s, border-color 0.3s;
         }
 
-        /* === СТИЛИ ДЛЯ УВЕЛИЧЕНИЯ КАРТИНКИ (ЛАЙТБОКС) === */
+        .more-btn:hover {
+            color: var(--text-color);
+            border-color: var(--text-color);
+        }
+
+        .project-details {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease-out, margin-top 0.4s ease;
+            background: rgba(0, 0, 0, 0.15);
+            border-radius: 12px;
+            padding: 0 20px;
+        }
+
+        .project-details.open {
+            max-height: 200px; 
+            margin-top: 15px;
+            padding: 20px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .project-details p {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #E2EFE5;
+            margin-bottom: 15px;
+        }
+
+        .details-action {
+            display: inline-block;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--accent-sage);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        .details-action:hover {
+            color: var(--text-color);
+        }
+
+        /* === ОТЗЫВЫ === */
+        .reviews {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 100px 10%;
+            border-radius: 40px;
+            margin: 60px 0;
+            overflow: hidden;
+        }
+
+        .reviews-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 60px;
+        }
+
+        .reviews-header h2 {
+            font-size: 3.5rem;
+        }
+
+        .reviews-nav {
+            display: flex;
+            gap: 15px;
+        }
+
+        .reviews-nav-btn {
+            width: 50px; height: 50px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            background: none;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .reviews-nav-btn:hover {
+            background: white;
+            color: black;
+        }
+
+        .reviews-slider {
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .reviews-container {
+            display: flex;
+            transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .review-item {
+            min-width: 100%;
+            display: grid;
+            grid-template-columns: 1fr 2.2fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .review-client {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .review-photo-mask {
+            width: 110px; height: 110px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin-bottom: 15px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            background: #1A3E2B;
+        }
+
+        .review-photo-mask img {
+            width: 100%; height: 100%; object-fit: cover;
+        }
+
+        .review-name {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.8rem;
+            color: white;
+            margin-bottom: 5px;
+        }
+
+        .review-meta {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--accent-sage);
+        }
+
+        .review-content {
+            background: rgba(255, 255, 255, 0.02);
+            padding: 45px;
+            border-radius: 24px;
+            position: relative;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+        }
+
+        .review-content::before {
+            content: '«';
+            position: absolute;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 8rem;
+            color: var(--accent-gold);
+            top: -20px; left: 20px;
+            opacity: 0.2;
+        }
+
+        .review-text {
+            font-size: 1.05rem;
+            line-height: 1.8;
+            color: #E2EFE5;
+        }
+
+        /* === ЛАЙТБОКС === */
         .lightbox {
             position: fixed;
             top: 0; left: 0;
             width: 100vw; height: 100vh;
-            background-color: rgba(7, 21, 14, 0.94); 
-            z-index: 9999;
+            background-color: rgba(7, 21, 14, 0.96); 
+            z-index: 99999;
             display: flex;
             justify-content: center;
             align-items: center;
             opacity: 0;
             pointer-events: none;
-            transition: opacity 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+            transition: opacity 0.4s ease;
         }
 
         .lightbox.active {
@@ -326,20 +512,33 @@
             pointer-events: auto;
         }
 
-        .lightbox img {
+        .lightbox img, .lightbox-video-mask video {
             max-width: 85%;
             max-height: 85%;
             border-radius: 16px;
             box-shadow: 0 25px 60px rgba(0,0,0,0.7);
-            transform: scale(0.85); 
-            transition: transform 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+            transition: transform 0.4s ease;
         }
 
-        .lightbox.active img {
+        .lightbox img {
+            transform: scale(0.85);
+        }
+
+        .lightbox.active img, .lightbox.active .lightbox-video-mask video {
             transform: scale(1);
         }
 
-        /* === 4. КОНТАКТЫ === */
+        .lightbox-video-mask {
+            max-width: 85%;
+            max-height: 85%;
+            display: none; 
+        }
+
+        .lightbox-video-mask video {
+            width: 100%; height: 100%;
+        }
+
+        /* === КОНТАКТЫ === */
         .contact {
             text-align: center;
             align-items: center;
@@ -414,11 +613,16 @@
         @media (max-width: 900px) {
             .about { grid-template-columns: 1fr; gap: 40px; text-align: center; }
             .photo-mask { margin: 0 auto; }
-            .hero h1, .about-content h2, .portfolio h2, .contact h2 { font-size: 2.8rem; }
+            .hero h1, .about-content h2, .portfolio h2, .contact h2, .reviews-header h2 { font-size: 2.8rem; }
+            .portfolio-section h3, .review-name { font-size: 1.9rem; }
             .hero-info { flex-direction: column; align-items: center; gap: 20px; text-align: center; }
             .contact-group { flex-direction: column; width: 100%; }
             section { padding: 80px 5%; }
             .intro-title { font-size: 2rem; }
+            .portfolio-grid { grid-template-columns: 1fr; }
+            .img-holder { height: 360px; }
+            .review-item { grid-template-columns: 1fr; gap: 30px; }
+            .reviews { padding: 60px 5%; }
         }
     </style>
 </head>
@@ -440,6 +644,9 @@
 
         <div class="lightbox" id="lightbox">
             <img src="" alt="Увеличенный просмотр" id="lightbox-img">
+            <div class="lightbox-video-mask" id="lightbox-video-mask">
+                <video src="" controls id="lightbox-video"></video>
+            </div>
         </div>
 
         <section class="hero">
@@ -470,8 +677,42 @@
 
         <section class="portfolio">
             <h2 class="reveal">Избранные кейсы</h2>
-            <div class="portfolio-grid reveal" id="projects-container">
+            
+            <!-- КАТЕГОРИЯ 1: Книги -->
+            <div class="portfolio-section reveal">
+                <h3>Книги и сказки</h3>
+                <div class="portfolio-grid" id="books-container"></div>
+            </div>
+
+            <!-- КАТЕГОРИЯ 2: Маркетинг -->
+            <div class="portfolio-section reveal">
+                <h3>Инфографика и айдентика</h3>
+                <div class="portfolio-grid" id="marketing-container"></div>
+            </div>
+
+            <!-- КАТЕГОРИЯ 3: Живые анимации -->
+            <div class="portfolio-section reveal">
+                <h3>Живые анимации (Синемаграфия)</h3>
+                <p class="section-intro-text">
+                    Оживление статических изображений с помощью технологий ИИ. Тонкая проработка микромимики, эффектов дыма, капель воды и кинематографичного освещения. Премиальный визуальный формат для цифрового искусства и коммерческого промо.
+                </p>
+                <div class="portfolio-grid" id="animations-container"></div>
+            </div>
+
+            <!-- РАЗДЕЛ: ОТЗЫВЫ -->
+            <div class="reviews reveal">
+                <div class="reviews-header">
+                    <h2>Отзывы</h2>
+                    <div class="reviews-nav">
+                        <button class="reviews-nav-btn" onclick="prevReview()">←</button>
+                        <button class="reviews-nav-btn" onclick="nextReview()">→</button>
+                    </div>
                 </div>
+                <div class="reviews-slider" id="reviews-slider">
+                    <div class="reviews-container" id="reviews-container"></div>
+                </div>
+            </div>
+
         </section>
 
         <section class="contact reveal">
@@ -491,12 +732,11 @@
     </div>
 
     <script>
-        // Сценарий кинематографического интро
+        // Интро
         window.addEventListener('DOMContentLoaded', () => {
             const t1 = document.getElementById('intro-t1');
             const t2 = document.getElementById('intro-t2');
             
-            // Запускаем появление текста с эффектом кинотитров
             setTimeout(() => {
                 t1.style.opacity = '1';
                 t1.style.transform = 'scale(1) translateY(0)';
@@ -507,52 +747,202 @@
                 t2.style.transform = 'translateY(0)';
             }, 1000);
 
-            // Автоматически закрываем интро через 3.2 секунды
             setTimeout(closeIntro, 3200);
         });
 
         function closeIntro() {
             const intro = document.getElementById('intro');
             const content = document.getElementById('site-content');
-            
+            if(!intro) return;
             intro.classList.add('fade-out');
             content.classList.add('visible');
-            
-            // Запускаем триггер проверки скролла, чтобы первый экран отработал корректно
             setTimeout(revealElements, 200);
         }
 
-        // БАЗА ДАННЫХ КЕЙСОВ
-        const myProjects = [
-            { image: 'auris.jpg', title: 'Auris Headphones',  tag: 'Инфографика / AI Концепт' },
-            { image: '2.jpg',     title: 'Aurélie Jewelry',   tag: 'Премиум Айдентика' },
-            { image: '4.jpg',     title: 'Klio Sneakers',     tag: 'Промо-арт & Motion' },
-            { image: '5.jpg',     title: 'Персональные Сказки', tag: 'Иллюстрации / Generation' }
+        // БАЗА ДАННЫХ ПРОЕКТОВ (Обновлено: убрана Катиро)
+        const booksProjects = [
+            { 
+                image: '5.jpg',         
+                title: 'Персональные Сказки',  
+                desc: 'Превращаю ваши задумки в полноценные иллюстрированные истории. Генерация уникальных миров и персонажей под вашу индивидуальную концепцию.',
+                link: 'https://web.telegram.org/k/#@Klio_As5'
+            },
+            { 
+                image: 'book-love.jpg', 
+                title: 'История нашей любви', 
+                desc: 'Переношу реальные истории отношений на страницы художественной книги. Идеальный премиальный подарок, сочетающий живые воспоминания и глубокую эстетику.',
+                link: 'https://web.telegram.org/k/#@Klio_As5'
+            },
+            
         ];
 
-        const container = document.getElementById('projects-container');
-        myProjects.forEach(project => {
-            container.innerHTML += `
-                <div class="project-card" onclick="openLightbox('images/${project.image}')">
-                    <div class="img-holder">
-                        <img src="images/${project.image}" alt="${project.title}">
-                    </div>
-                    <div class="project-meta">
-                        <h3>${project.title}</h3>
-                        <span>${project.tag}</span>
-                    </div>
-                </div>
-            `;
-        });
+        const marketingProjects = [
+            { image: 'auris.jpg', title: 'Auris Headphones', desc: 'Продающая инфографика нового поколения для маркетплейсов.', link: '#' },
+            { image: '2.jpg', title: 'Aurélie Jewelry', desc: 'Премиум Айдентика, концептуальный дизайн логотипов и фирменных стилей.', link: '#' },
+            { image: '4.jpg', title: 'Klio Sneakers', desc: 'Динамичный промо-арт для рекламных кампаний обувных брендов.', link: '#' }
+        ];
 
-        // АНИМАЦИЯ ПОЯВЛЕНИЯ ПРИ СКРОЛЛЕ (SCROLL REVEAL)
+        const animationProjects = [
+            { 
+                image: 'grok_video_2026-06-21-08-52-10.mp4', 
+                title: 'Coco Noir Chanel // Синемаграфия', 
+                desc: 'Коммерческое промо высокого уровня. Эффекты густого клубящегося дыма и стекающих капель воды, оживляющие флакон и поднимающие ценность продукта.', 
+                link: 'https://web.telegram.org/k/#@Klio_As5' 
+            },
+            { 
+                image: 'grok_video_2026-06-16-20-01-46.mp4',         
+                title: 'Кинематографичный портрет',  
+                desc: 'Глубокая анимация персонажа. Живой взгляд, мягкое дыхание и реалистичные стекающие капли летнего дождя создают невероятный эффект присутствия.',
+                link: 'https://web.telegram.org/k/#@Klio_As5'
+            },
+            { 
+                image: 'grok_video_2026-06-16-20-03-35.mp4', 
+                title: 'Оживление мимики ИИ',   
+                desc: 'Генерация живых портретов с тонкой проработкой микромимики лица, улыбки и моргания. Идеально для интеграции в интерактивные книги и диджитал-новеллы.',
+                link: 'https://web.telegram.org/k/#@Klio_As5'
+            }
+        ];
+
+        // Функция сборки категорий
+        function renderCategory(projectsArray, containerId) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+            
+            let htmlContent = '';
+            projectsArray.forEach((project, index) => {
+                const isVideo = project.image.endsWith('.mp4');
+
+                htmlContent += `
+                    <div class="project-card">
+                        <div class="img-holder" onclick="openLightbox('images/${project.image}', ${isVideo})">
+                            ${isVideo ? `
+                                <video src="images/${project.image}" autoplay muted loop playsinline></video>
+                            ` : `
+                                <img src="images/${project.image}" alt="${project.title}">
+                            `}
+                        </div>
+                        <div class="project-meta">
+                            <h4>${project.title}</h4>
+                            <button class="more-btn" onclick="toggleDetails('${containerId}-${index}')">Подробнее</button>
+                        </div>
+                        <div class="project-details" id="${containerId}-${index}">
+                            <p>${project.desc}</p>
+                            <a href="${project.link}" target="_blank" class="details-action">Обсудить проект →</a>
+                        </div>
+                    </div>
+                `;
+            });
+            container.innerHTML = htmlContent;
+        }
+
+        renderCategory(booksProjects, 'books-container');
+        renderCategory(marketingProjects, 'marketing-container');
+        renderCategory(animationProjects, 'animations-container');
+
+        // БАЗА ДАННЫХ ОТЗЫВОВ (Полностью заменены на реальные тексты)
+        const allReviews = [
+            {
+                photo: 'images/review-avatar1.jpg', 
+                name: 'Анна К.',
+                tag: 'Заказ именной книги',
+                text: 'Сегодня мы получили книгу. Не передать словами, как же я её ждала! Думала, что дождусь мужа, чтобы открыть вместе, но не удержалась. Я в диком восторге! Это что-то невероятное. Один из самых чудесных и памятных подарков. Ася, спасибо тебе огромное за радость и эмоции, которые ты нам подарила! Моему счастью просто нет предела. Я уже представила, как лет в 18 Анютка откроет книгу и будет плакать от умиления вместе с нами. Нет ничего лучше, чем книга, а когда она еще именная и с прекрасными иллюстрациями — это вообще что-то необыкновенное!'
+            },
+            {
+                photo: 'images/review-avatar2.jpg', 
+                name: 'Ольга П.',
+                tag: 'Книга на основе реальных событий',
+                text: 'Огромное спасибо за создание такого шедевра, иначе сказать просто невозможно! Это действительный талант — создавать такие великолепные изделия для детей. Книга — это всегда лучший подарок, а когда она основана на реальных событиях, и ты в ней главный герой, так еще и с лучшим другом — это вообще самое идеальное, что можно придумать! Очень приятно работать с Клио, так как всего лишь нужно кратко сказать какие-то базовые критерии, на которых будет основана книга, и вот уже в печатном виде у тебя в руках целая история, связанная с твоим ребенком! Изготовление очень быстрое, печать качественная, минимум времени тратится на оформление заказа. Клио очень вежливая и тактичная, с таким человеком очень комфортно и приятно работать.'
+            },
+            {
+                photo: 'images/review-avatar3.jpg', 
+                name: 'Мария Д.',
+                tag: 'Категория "Персонаж-двойник"',
+                text: 'Очаровательная книга с персонажем-двойником! Заказала книгу, где главный герой — мой ребёнок в виде мультяшного персонажа, и осталась в полном восторге. Иллюстрации получились очень милыми и узнаваемыми — малыш сразу узнал себя на страницах! Качество печати отличное, страницы плотные, яркие цвета. Сюжет простой и добрый, идеально подходит для детей. Отдельно порадовала скорость доставки и аккуратная упаковка. Теперь это наша любимая книга для чтения перед сном!'
+            },
+            {
+                photo: 'images/review-avatar4.jpg', 
+                name: 'Ирина Г.',
+                tag: 'Развивающие книги',
+                text: 'Наконец-то дошли руки написать про первые впечатления о книге. Первое, что мы испытали — это восторг! Хочу добавить, что книга однозначно станет отличным подарком для любого ребенка. Она не только развлечет малыша, но и поможет развить воображение и любовь к чтению. Рекомендую приобрести её каждому родителю, стремящемуся подарить своему ребенку незабываемые впечатления и полезные знания! Огромное спасибо!'
+            }
+        ];
+
+        function renderReviews() {
+            const container = document.getElementById('reviews-container');
+            if(!container) return;
+            let htmlContent = '';
+            allReviews.forEach(review => {
+                htmlContent += `
+                    <div class="review-item">
+                        <div class="review-client">
+                            <div class="review-photo-mask">
+                                <img src="${review.photo}" alt="${review.name}" onerror="this.src='images/3.jpg'">
+                            </div>
+                            <h4 class="review-name">${review.name}</h4>
+                            <p class="review-meta">${review.tag}</p>
+                        </div>
+                        <div class="review-content">
+                            <p class="review-text">${review.text}</p>
+                        </div>
+                    </div>
+                `;
+            });
+            container.innerHTML = htmlContent;
+        }
+
+        renderReviews();
+
+        // СЛАЙДЕР ОТЗЫВОВ
+        let currentReviewIndex = 0;
+        const totalReviews = allReviews.length;
+        const reviewsContainer = document.getElementById('reviews-container');
+
+        function updateReviewSlider() {
+            if(!reviewsContainer) return;
+            const offset = -currentReviewIndex * 100;
+            reviewsContainer.style.transform = `translateX(${offset}%)`;
+        }
+
+        function nextReview() {
+            if (totalReviews <= 1) return;
+            currentReviewIndex = (currentReviewIndex + 1) % totalReviews;
+            updateReviewSlider();
+        }
+
+        function prevReview() {
+            if (totalReviews <= 1) return;
+            currentReviewIndex = (currentReviewIndex - 1 + totalReviews) % totalReviews;
+            updateReviewSlider();
+        }
+
+        // Автоперемотка отзывов каждые 12 секунд (так как тексты стали больше, чтобы успевали читать)
+        if (totalReviews > 1) {
+            setInterval(nextReview, 12000);
+        }
+
+        // Подробнее
+        function toggleDetails(id) {
+            const detailBlock = document.getElementById(id);
+            const btn = detailBlock.previousElementSibling.querySelector('.more-btn');
+            
+            detailBlock.classList.toggle('open');
+            
+            if (detailBlock.classList.contains('open')) {
+                detailBlock.style.maxHeight = detailBlock.scrollHeight + "px";
+                btn.textContent = "Скрыть";
+            } else {
+                detailBlock.style.maxHeight = "0px";
+                btn.textContent = "Подробнее";
+            }
+        }
+
+        // Reveal анимация при скролле
         function revealElements() {
             const reveals = document.querySelectorAll('.reveal');
             reveals.forEach(element => {
                 const windowHeight = window.innerHeight;
                 const elementTop = element.getBoundingClientRect().top;
-                const elementVisible = 100; 
-
+                const elementVisible = 150; 
                 if (elementTop < windowHeight - elementVisible) {
                     element.classList.add('active');
                 }
@@ -560,17 +950,32 @@
         }
         window.addEventListener('scroll', revealElements);
 
-        // СКРИПТ ОТКРЫТИЯ И ЗАКРЫТИЯ ЛАЙТБОКСА
+        // Лайтбокс (увеличение медиа)
         const lightbox = document.getElementById('lightbox');
         const lightboxImg = document.getElementById('lightbox-img');
+        const lightboxVideoMask = document.getElementById('lightbox-video-mask');
+        const lightboxVideo = document.getElementById('lightbox-video');
 
-        function openLightbox(imageSrc) {
-            lightboxImg.src = imageSrc;
+        function openLightbox(mediaSrc, isVideo) {
+            lightboxImg.style.display = 'none';
+            lightboxVideoMask.style.display = 'none';
+            lightboxVideo.pause();
+
+            if (isVideo) {
+                lightboxVideo.src = mediaSrc;
+                lightboxVideoMask.style.display = 'block';
+                lightboxVideo.play();
+            } else {
+                lightboxImg.src = mediaSrc;
+                lightboxImg.style.display = 'block';
+            }
+            
             lightbox.classList.add('active');
         }
 
         lightbox.addEventListener('click', () => {
             lightbox.classList.remove('active');
+            lightboxVideo.pause();
         });
     </script>
 </body>
