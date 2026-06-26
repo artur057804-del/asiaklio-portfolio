@@ -12,26 +12,21 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,700;1,400;1,500&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
-
     <style>
-        *, *::before, *::after {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
         :root {
-            --bg-deep:    #0B1C14;
-            --bg-mid:     #163E2A;
-            --bg-surface: #1C4A32;
-            --text:       #F4F7F5;
-            --text-muted: #A3C3AD;
-            --sage:       #B4D6BC;
-            --gold:       #F1DBB3;
-            --gold-dim:   rgba(241,219,179,0.25);
+            --bg-deep:     #0B1C14;
+            --bg-mid:      #163E2A;
+            --bg-surface:  #1C4A32;
+            --text:        #F4F7F5;
+            --text-muted:  #A3C3AD;
+            --sage:        #B4D6BC;
+            --gold:        #F1DBB3;
+            --gold-dim:    rgba(241,219,179,0.25);
             --white-glass: rgba(255,255,255,0.06);
             --white-line:  rgba(255,255,255,0.12);
-            --shadow:     0 30px 70px rgba(0,0,0,0.45);
+            --shadow:      0 30px 70px rgba(0,0,0,0.45);
             --radius-card: 22px;
             --radius-pill: 100px;
         }
@@ -45,18 +40,10 @@
             overflow-x: hidden;
         }
 
-        /* ── AMBIENT BLOBS ── */
-        .blur-bg {
-            position: fixed; inset: 0; z-index: 0;
-            pointer-events: none; overflow: hidden;
-        }
-        .blob {
-            position: absolute; border-radius: 50%;
-            filter: blur(90px); opacity: 0.35;
-            will-change: transform;
-            animation: floatBlob 28s infinite alternate ease-in-out;
-        }
-        .blob1 { width: 500px; height: 500px; top: -8%; left: -8%;  background: #2E7A50; }
+        /* ── BLOBS ── */
+        .blur-bg { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+        .blob { position: absolute; border-radius: 50%; filter: blur(90px); opacity: 0.35; will-change: transform; animation: floatBlob 28s infinite alternate ease-in-out; }
+        .blob1 { width: 500px; height: 500px; top: -8%; left: -8%; background: #2E7A50; }
         .blob2 { width: 420px; height: 420px; bottom: -10%; right: -8%; background: #164429; animation-delay: -7s; }
         .blob3 { width: 300px; height: 300px; top: 40%; left: 55%; background: #1A5C38; animation-delay: -14s; }
         @keyframes floatBlob {
@@ -69,7 +56,7 @@
         /* ── NAV ── */
         nav {
             position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
-            padding: 22px clamp(5%, 10vw, 120px);
+            padding: 22px clamp(5%,10vw,120px);
             display: flex; align-items: center; justify-content: space-between;
             transition: background .4s, backdrop-filter .4s, box-shadow .4s;
         }
@@ -97,16 +84,15 @@
         }
         .nav-links a:hover { color: var(--text); }
         .nav-links a:hover::after { transform: scaleX(1); }
+
         /* ── BURGER ── */
         .burger {
-            display: none;
-            flex-direction: column; justify-content: center; gap: 5px;
+            display: none; flex-direction: column; justify-content: center; gap: 5px;
             width: 36px; height: 36px; background: none; border: none;
             cursor: pointer; padding: 4px; z-index: 1100;
         }
         .burger span {
-            display: block; height: 1.5px; background: var(--text);
-            border-radius: 2px;
+            display: block; height: 1.5px; background: var(--text); border-radius: 2px;
             transition: transform .35s ease, opacity .35s ease, width .35s ease;
         }
         .burger span:nth-child(2) { width: 70%; }
@@ -114,37 +100,28 @@
         .burger.open span:nth-child(2) { opacity: 0; width: 0; }
         .burger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
 
-        /* ── MOBILE MENU OVERLAY ── */
+        /* ── MOBILE MENU ── */
         .mobile-menu {
             position: fixed; inset: 0; z-index: 1050;
-            background: rgba(6,14,11,0.97);
-            backdrop-filter: blur(18px);
-            display: flex; flex-direction: column;
-            align-items: center; justify-content: center; gap: 10px;
-            opacity: 0; visibility: hidden;
-            transition: opacity .4s ease, visibility .4s ease;
+            background: rgba(6,14,11,0.97); backdrop-filter: blur(18px);
+            display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;
+            opacity: 0; visibility: hidden; transition: opacity .4s ease, visibility .4s ease;
         }
         .mobile-menu.open { opacity: 1; visibility: visible; }
         .mobile-menu a {
             font-family: 'Cormorant Garamond', serif;
-            font-size: clamp(2rem, 10vw, 3rem); font-weight: 400;
+            font-size: clamp(2rem,10vw,3rem); font-weight: 400;
             color: var(--text); text-decoration: none; letter-spacing: 1px;
-            transition: color .25s;
             transform: translateY(16px); opacity: 0;
             transition: color .25s, transform .45s ease, opacity .45s ease;
         }
-        .mobile-menu.open a {
-            transform: none; opacity: 1;
-        }
+        .mobile-menu.open a { transform: none; opacity: 1; }
         .mobile-menu.open a:nth-child(1) { transition-delay: .08s; }
         .mobile-menu.open a:nth-child(2) { transition-delay: .14s; }
         .mobile-menu.open a:nth-child(3) { transition-delay: .20s; }
         .mobile-menu.open a:nth-child(4) { transition-delay: .26s; }
         .mobile-menu a:hover { color: var(--gold); }
-        .mobile-menu-sub {
-            margin-top: 32px; font-size: .7rem; text-transform: uppercase;
-            letter-spacing: 3px; color: var(--text-muted);
-        }
+        .mobile-menu-sub { margin-top: 32px; font-size: .7rem; text-transform: uppercase; letter-spacing: 3px; color: var(--text-muted); }
 
         @media (max-width: 600px) {
             .nav-links { display: none; }
@@ -161,8 +138,7 @@
         .intro.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
         .intro-name {
             font-family: 'Cormorant Garamond', serif;
-            font-size: clamp(2rem,6vw,3.5rem); font-weight: 400;
-            letter-spacing: 2px; color: var(--text);
+            font-size: clamp(2rem,6vw,3.5rem); font-weight: 400; letter-spacing: 2px; color: var(--text);
             opacity: 0; transform: translateY(12px);
             transition: opacity 1.2s ease, transform 1.2s ease;
         }
@@ -174,8 +150,7 @@
         .intro-skip {
             position: absolute; bottom: 36px; right: 36px;
             font-size: 0.72rem; text-transform: uppercase; letter-spacing: 2px;
-            color: rgba(255,255,255,0.3); background: none; border: none; cursor: pointer;
-            transition: color .3s;
+            color: rgba(255,255,255,0.3); background: none; border: none; cursor: pointer; transition: color .3s;
         }
         .intro-skip:hover { color: var(--sage); }
 
@@ -199,9 +174,9 @@
         .reveal.active { opacity: 1; transform: none; }
 
         /* ── HERO ── */
-        .hero { gap: 0; padding-top: clamp(120px,14vw,160px); }
+        .hero { gap: 0; padding-top: clamp(120px,14vw,160px); position: relative; overflow: hidden; }
         .hero .label { margin-bottom: 28px; }
-        .hero h1 { font-size: clamp(2.4rem,6.5vw,5rem); max-width: 860px; margin-bottom: 0; }
+        .hero h1 { font-size: clamp(2.4rem,6.5vw,5rem); max-width: 860px; }
         .hero h1 em { font-style: italic; color: var(--gold); border-bottom: 1px solid var(--gold-dim); }
         .hero-footer {
             display: flex; justify-content: space-between; align-items: flex-end;
@@ -214,6 +189,30 @@
             color: var(--text-muted); display: flex; align-items: center; gap: 10px;
         }
         .hero-scroll::before { content: ''; display: block; width: 30px; height: 1px; background: var(--text-muted); }
+
+        /* ── HERO VERTICAL NAME ── */
+        .hero-vertical-name {
+            position: absolute;
+            right: clamp(16px,4vw,60px); top: 50%;
+            transform: translateY(-50%) rotate(90deg);
+            transform-origin: center center;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(3rem,7vw,6rem); font-weight: 400; letter-spacing: 0.25em;
+            color: rgba(241,219,179,0.07);
+            white-space: nowrap; pointer-events: none; user-select: none;
+        }
+
+        /* ── HERO SLIDESHOW ── */
+        .hero-media { position: absolute; inset: 0; z-index: 0; overflow: hidden; }
+        .hero-media-item { position: absolute; inset: 0; opacity: 0; transition: opacity 1.2s ease; }
+        .hero-media-item.active { opacity: 1; }
+        .hero-media-item img,
+        .hero-media-item video { width: 100%; height: 100%; object-fit: cover; object-position: center; display: block; }
+        .hero-media::after {
+            content: ''; position: absolute; inset: 0; z-index: 1;
+            background: linear-gradient(to right, rgba(11,28,20,0.92) 0%, rgba(11,28,20,0.6) 55%, rgba(11,28,20,0.3) 100%);
+        }
+        .hero .label, .hero h1, .hero-footer, .hero-vertical-name { position: relative; z-index: 2; }
 
         /* ── ABOUT ── */
         .about-inner { display: grid; grid-template-columns: 1fr 1.3fr; gap: clamp(40px,8vw,90px); align-items: center; }
@@ -314,7 +313,7 @@
         }
         .lightbox.open { opacity: 1; visibility: visible; }
         .lightbox-img { max-width: 88vw; max-height: 88vh; border-radius: 16px; box-shadow: 0 30px 80px rgba(0,0,0,.8); transform: scale(.92); transition: transform .4s ease; display: none; }
-        .lightbox-vid-wrap { max-width: 88vw; max-height: 88vh; display: none; border-radius: 16px; overflow: hidden; box-shadow: 0 30px 80px rgba(0,0,0,.8); }
+        .lightbox-vid-wrap { max-width: 88vw; max-height: 88vh; display: none; border-radius: 16px; overflow: hidden; box-shadow: 0 30px 80px rgba(0,0,0,.8); transform: scale(.92); transition: transform .4s ease; }
         .lightbox-vid-wrap video { width: 100%; height: 100%; display: block; }
         .lightbox.open .lightbox-img, .lightbox.open .lightbox-vid-wrap { transform: scale(1); }
         .lightbox-close { position: absolute; top: 24px; right: 30px; font-size: 2rem; color: rgba(255,255,255,.5); background: none; border: none; cursor: pointer; line-height: 1; transition: color .3s; }
@@ -326,6 +325,7 @@
             .photo-frame { margin: 0 auto; }
             .rev-item { grid-template-columns: 1fr; gap: 24px; }
             .hero-footer { flex-direction: column; align-items: flex-start; }
+            .hero-vertical-name { display: none; }
         }
         @media (max-width: 500px) {
             .port-grid { grid-template-columns: 1fr; }
@@ -349,7 +349,7 @@
         <li><a href="#about">Обо мне</a></li>
         <li><a href="#portfolio">Портфолио</a></li>
         <li><a href="#reviews">Отзывы</a></li>
-        <li><a href="#contact">Контакт</a></li>
+        <li><a href="#contact">Контакты</a></li>
     </ul>
     <button class="burger" id="burger" aria-label="Меню" onclick="toggleMenu()">
         <span></span><span></span><span></span>
@@ -361,7 +361,7 @@
     <a href="#about"     onclick="closeMenu()">Обо мне</a>
     <a href="#portfolio" onclick="closeMenu()">Портфолио</a>
     <a href="#reviews"   onclick="closeMenu()">Отзывы</a>
-    <a href="#contact"   onclick="closeMenu()">Контакт</a>
+    <a href="#contact"   onclick="closeMenu()">Контакты</a>
     <div class="mobile-menu-sub">Asya Klio · Art & AI Design</div>
 </div>
 
@@ -382,15 +382,19 @@
 <!-- SITE -->
 <div class="site" id="site">
 
+    <!-- HERO -->
     <section class="hero" id="hero">
-        <div class="label reveal">Asya Klio // Portfolio</div>
+        <div class="hero-vertical-name" aria-hidden="true">ASYA KLIO</div>
+        <div class="hero-media" id="hero-media"></div>
+        <div class="label reveal">Portfolio</div>
         <h1 class="reveal">Создаю визуальные миры, где маркетинг встречает <em>чистое искусство</em> и технологии ИИ</h1>
         <div class="hero-footer reveal">
-            <p class="hero-desc">Дизайн упаковки, премиальная айдентика и инфографика нового поколения — на стыке человеческого вкуса и нейросетей.</p>
-            <span class="hero-scroll">Листайте вниз</span>
+            <p class="hero-desc">Премиальная айдентика, дизайн упаковки и инфографика нового поколения — на стыке человеческого вкуса и нейросетей.</p>
+            <span class="hero-scroll">Смотреть работы</span>
         </div>
     </section>
 
+    <!-- ABOUT -->
     <section id="about">
         <div class="about-inner">
             <div class="reveal">
@@ -400,12 +404,13 @@
             </div>
             <div class="about-text-col reveal">
                 <h2>Привет, я <em>Ася</em></h2>
-                <p class="body-text">Я графический дизайнер с глубоким пониманием эстетики. Моя суперсила — чувствовать ДНК бренда и передавать её через форму, цвет и шрифты.</p>
-                <p class="body-text">Я активно интегрирую в работу генеративные инструменты искусственного интеллекта. Это позволяет создавать уникальный, сказочный и недосягаемый для конкурентов контент — сохраняя живую, тёплую человеческую концепцию.</p>
+                <p class="body-text">Графический дизайнер с глубоким пониманием эстетики — чувствую ДНК бренда и передаю её через форму, цвет и шрифты.</p>
+                <p class="body-text">Интегрирую генеративные инструменты ИИ в каждый проект. Результат — уникальный визуальный язык, недосягаемый для конкурентов, с живой человеческой концепцией в основе.</p>
             </div>
         </div>
     </section>
 
+    <!-- PORTFOLIO -->
     <section class="portfolio" id="portfolio">
         <h2 class="reveal">Избранные кейсы</h2>
         <div class="label reveal">Портфолио</div>
@@ -426,6 +431,7 @@
             <div class="port-grid" id="grid-anim"></div>
         </div>
 
+        <!-- REVIEWS -->
         <div class="reviews-wrap reveal" id="reviews">
             <div class="reviews-head">
                 <h2>Отзывы</h2>
@@ -439,6 +445,7 @@
         </div>
     </section>
 
+    <!-- CONTACT -->
     <section class="contact reveal" id="contact">
         <h2>Давайте создавать истории</h2>
         <p class="contact-sub">Если вам нужен дизайн, который вызывает эмоции и поднимает ценность продукта — напишите мне.</p>
@@ -452,27 +459,56 @@
 </div>
 
 <script>
+/* ── DATA ── */
 const books = [
-    { file:'5.jpg', title:'Персональные сказки', desc:'Превращаю ваши задумки в полноценные иллюстрированные истории. Генерация уникальных миров и персонажей под вашу концепцию.', link:'https://t.me/Klio_As5' },
-    { file:'book-love.jpg', title:'История нашей любви', desc:'Переношу реальные истории отношений на страницы художественной книги. Идеальный премиальный подарок с живыми воспоминаниями и глубокой эстетикой.', link:'https://t.me/Klio_As5' }
+    { file:'5.jpg',          title:'Персональные сказки',   desc:'Превращаю ваши задумки в полноценные иллюстрированные истории. Генерация уникальных миров и персонажей под вашу концепцию.',  link:'https://t.me/Klio_As5' },
+    { file:'book-love.jpg',  title:'История нашей любви',   desc:'Переношу реальные истории отношений на страницы художественной книги. Идеальный премиальный подарок с живыми воспоминаниями и глубокой эстетикой.', link:'https://t.me/Klio_As5' }
 ];
 const marketing = [
-    { file:'auris.jpg', title:'Auris Headphones', desc:'Продающая инфографика нового поколения для маркетплейсов.', link:'#' },
-    { file:'2.jpg', title:'Aurélie Jewelry', desc:'Премиум айдентика, концептуальный дизайн логотипов и фирменных стилей.', link:'#' },
-    { file:'4.jpg', title:'Klio Sneakers', desc:'Динамичный промо-арт для рекламных кампаний обувных брендов.', link:'#' }
+    { file:'auris.jpg', title:'Auris Headphones', desc:'Продающая инфографика нового поколения для маркетплейсов.',                              link:'https://t.me/Klio_As5' },
+    { file:'2.jpg',     title:'Aurélie Jewelry',  desc:'Премиум айдентика, концептуальный дизайн логотипов и фирменных стилей.',                 link:'https://t.me/Klio_As5' },
+    { file:'4.jpg',     title:'Klio Sneakers',    desc:'Динамичный промо-арт для рекламных кампаний обувных брендов.',                           link:'https://t.me/Klio_As5' }
 ];
 const animations = [
     { file:'grok_video_2026-06-21-08-52-10.mp4', title:'Coco Noir Chanel // Синемаграфия', desc:'Коммерческое промо высокого уровня. Эффекты густого дыма и стекающих капель воды оживляют флакон и поднимают ценность продукта.', link:'https://t.me/Klio_As5' },
-    { file:'grok_video_2026-06-16-20-01-46.mp4', title:'Кинематографичный портрет', desc:'Живой взгляд, мягкое дыхание и реалистичные капли летнего дождя — невероятный эффект присутствия.', link:'https://t.me/Klio_As5' },
-    { file:'grok_video_2026-06-16-20-03-35.mp4', title:'Оживление мимики ИИ', desc:'Генерация живых портретов с тонкой проработкой микромимики, улыбки и моргания. Идеально для интерактивных книг и диджитал-новелл.', link:'https://t.me/Klio_As5' }
+    { file:'grok_video_2026-06-16-20-01-46.mp4', title:'Кинематографичный портрет',        desc:'Живой взгляд, мягкое дыхание и реалистичные капли летнего дождя — невероятный эффект присутствия.',                              link:'https://t.me/Klio_As5' },
+    { file:'grok_video_2026-06-16-20-03-35.mp4', title:'Оживление мимики ИИ',              desc:'Генерация живых портретов с тонкой проработкой микромимики, улыбки и моргания. Идеально для интерактивных книг и диджитал-новелл.', link:'https://t.me/Klio_As5' }
 ];
 const reviews = [
-    { photo:'images/review-avatar1.jpg', name:'Анна К.', tag:'Именная книга', text:'Сегодня мы получили книгу. Я в диком восторге! Это что-то невероятное. Один из самых чудесных и памятных подарков. Ася, спасибо тебе огромное за радость и эмоции, которые ты нам подарила! Моему счастью просто нет предела. Нет ничего лучше, чем книга, а когда она именная и с прекрасными иллюстрациями — это вообще что-то необыкновенное!' },
-    { photo:'images/review-avatar2.jpg', name:'Ольга П.', tag:'Книга на основе реальных событий', text:'Огромное спасибо за создание такого шедевра! Очень приятно работать с Клио — нужно лишь кратко сказать базовые критерии, и вот уже в печатном виде у тебя в руках целая история. Изготовление очень быстрое, печать качественная, минимум времени тратится на оформление заказа. Клио очень вежливая и тактичная, с таким человеком очень комфортно и приятно работать.' },
-    { photo:'images/review-avatar3.jpg', name:'Мария Д.', tag:'Персонаж-двойник', text:'Очаровательная книга с персонажем-двойником! Иллюстрации получились очень милыми и узнаваемыми — малыш сразу узнал себя на страницах! Качество печати отличное, яркие цвета. Сюжет простой и добрый, идеально для детей. Теперь это наша любимая книга для чтения перед сном!' },
-    { photo:'images/review-avatar4.jpg', name:'Ирина Г.', tag:'Развивающие книги', text:'Первое, что мы испытали — это восторг! Книга однозначно станет отличным подарком для любого ребёнка. Она не только развлечёт малыша, но и поможет развить воображение и любовь к чтению. Огромное спасибо!' }
+    { photo:'images/review-avatar1.jpg', name:'Анна К.',   tag:'Именная книга',                   text:'Сегодня мы получили книгу. Я в диком восторге! Это что-то невероятное. Один из самых чудесных и памятных подарков. Ася, спасибо тебе огромное за радость и эмоции, которые ты нам подарила! Моему счастью просто нет предела. Нет ничего лучше, чем книга, а когда она именная и с прекрасными иллюстрациями — это вообще что-то необыкновенное!' },
+    { photo:'images/review-avatar2.jpg', name:'Ольга П.',  tag:'Книга на основе реальных событий', text:'Огромное спасибо за создание такого шедевра! Очень приятно работать с Клио — нужно лишь кратко сказать базовые критерии, и вот уже в печатном виде у тебя в руках целая история. Изготовление очень быстрое, печать качественная, минимум времени тратится на оформление заказа. Клио очень вежливая и тактичная, с таким человеком очень комфортно и приятно работать.' },
+    { photo:'images/review-avatar3.jpg', name:'Мария Д.',  tag:'Персонаж-двойник',                text:'Очаровательная книга с персонажем-двойником! Иллюстрации получились очень милыми и узнаваемыми — малыш сразу узнал себя на страницах! Качество печати отличное, яркие цвета. Сюжет простой и добрый, идеально для детей. Теперь это наша любимая книга для чтения перед сном!' },
+    { photo:'images/review-avatar4.jpg', name:'Ирина Г.',  tag:'Развивающие книги',               text:'Первое, что мы испытали — это восторг! Книга однозначно станет отличным подарком для любого ребёнка. Она не только развлечёт малыша, но и поможет развить воображение и любовь к чтению. Огромное спасибо!' }
 ];
 
+/* ── HERO SLIDESHOW ── */
+const heroItems = [
+    { file:'grok_video_2026-06-21-08-52-10.mp4', isVideo:true  },
+    { file:'auris.jpg',                           isVideo:false },
+    { file:'grok_video_2026-06-16-20-01-46.mp4', isVideo:true  },
+    { file:'2.jpg',                               isVideo:false },
+    { file:'grok_video_2026-06-16-20-03-35.mp4', isVideo:true  },
+    { file:'4.jpg',                               isVideo:false },
+];
+const heroEl = document.getElementById('hero-media');
+if (heroEl) {
+    heroEl.innerHTML = heroItems.map((m, i) => {
+        const src = `images/${m.file}`;
+        const inner = m.isVideo
+            ? `<video src="${src}" autoplay muted loop playsinline></video>`
+            : `<img src="${src}" loading="${i===0?'eager':'lazy'}" alt="">`;
+        return `<div class="hero-media-item${i===0?' active':''}">${inner}</div>`;
+    }).join('');
+    let hIdx = 0;
+    const slides = heroEl.querySelectorAll('.hero-media-item');
+    setInterval(() => {
+        slides[hIdx].classList.remove('active');
+        hIdx = (hIdx + 1) % slides.length;
+        slides[hIdx].classList.add('active');
+    }, 4500);
+}
+
+/* ── RENDER CARDS ── */
 function buildCard(item, gridId, idx) {
     const isVideo = item.file.endsWith('.mp4');
     const src = `images/${item.file}`;
@@ -494,15 +530,15 @@ function buildCard(item, gridId, idx) {
             </div>
         </div>`;
 }
-
 function renderGrid(arr, id) {
     const el = document.getElementById(id);
     if (el) el.innerHTML = arr.map((item,i) => buildCard(item,id,i)).join('');
 }
-renderGrid(books,'grid-books');
-renderGrid(marketing,'grid-marketing');
-renderGrid(animations,'grid-anim');
+renderGrid(books,      'grid-books');
+renderGrid(marketing,  'grid-marketing');
+renderGrid(animations, 'grid-anim');
 
+/* ── REVIEWS ── */
 const revTrack = document.getElementById('rev-track');
 const revDots  = document.getElementById('rev-dots');
 if (revTrack) revTrack.innerHTML = reviews.map(r => `
@@ -527,6 +563,7 @@ function nextRev() { goRev(revIdx+1); }
 function prevRev() { goRev(revIdx-1); }
 if (reviews.length > 1) setInterval(nextRev, 12000);
 
+/* ── DETAILS TOGGLE ── */
 function toggleDetails(id, btn) {
     const el = document.getElementById(id);
     if (!el) return;
@@ -534,10 +571,11 @@ function toggleDetails(id, btn) {
     btn.textContent = open ? 'Скрыть' : 'Подробнее';
 }
 
-const lb    = document.getElementById('lightbox');
-const lbImg = document.getElementById('lb-img');
-const lbVidW= document.getElementById('lb-vid-wrap');
-const lbVid = document.getElementById('lb-vid');
+/* ── LIGHTBOX ── */
+const lb     = document.getElementById('lightbox');
+const lbImg  = document.getElementById('lb-img');
+const lbVidW = document.getElementById('lb-vid-wrap');
+const lbVid  = document.getElementById('lb-vid');
 function openLightbox(src, isVideo) {
     lbImg.style.display = lbVidW.style.display = 'none'; lbVid.pause();
     if (isVideo) { lbVid.src = src; lbVidW.style.display = 'block'; lbVid.play(); }
@@ -549,7 +587,7 @@ lb.addEventListener('click', e => { if (e.target===lb) closeLightbox(); });
 document.addEventListener('keydown', e => { if (e.key==='Escape') closeLightbox(); });
 document.addEventListener('keydown', e => { if (e.key==='Enter' && e.target.classList.contains('card-media')) e.target.click(); });
 
-// BURGER MENU
+/* ── BURGER ── */
 function toggleMenu() {
     const b = document.getElementById('burger');
     const m = document.getElementById('mobile-menu');
@@ -563,10 +601,11 @@ function closeMenu() {
     document.body.style.overflow = '';
 }
 
-// NAV scroll
+/* ── NAV SCROLL ── */
 const nav = document.getElementById('nav');
 window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 60), { passive:true });
 
+/* ── INTRO ── */
 function closeIntro() {
     document.getElementById('intro').classList.add('hidden');
     document.getElementById('site').classList.add('visible');
@@ -580,6 +619,7 @@ window.addEventListener('DOMContentLoaded', () => {
     setTimeout(closeIntro, 2800);
 });
 
+/* ── SCROLL REVEAL ── */
 function checkReveal() {
     const vh = window.innerHeight;
     document.querySelectorAll('.reveal').forEach(el => {
