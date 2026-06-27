@@ -176,7 +176,16 @@
         /* ── HERO ── */
         .hero { gap: 0; padding-top: clamp(120px,14vw,160px); position: relative; overflow: hidden; }
         .hero .label { margin-bottom: 28px; }
-        .hero h1 { font-size: clamp(2.4rem,6.5vw,5rem); max-width: 860px; }
+        
+        .hero h1 { 
+            font-size: clamp(2.4rem,6.5vw,5rem); 
+            max-width: 860px; 
+            opacity: 0; 
+            transform: translateY(28px); 
+            transition: opacity .8s ease, transform .8s ease;
+        }
+        .hero h1.active { opacity: 1; transform: none; }
+        
         .hero h1 em { font-style: italic; color: var(--gold); border-bottom: 1px solid var(--gold-dim); }
         .hero-footer {
             display: flex; justify-content: space-between; align-items: flex-end;
@@ -190,29 +199,68 @@
         }
         .hero-scroll::before { content: ''; display: block; width: 30px; height: 1px; background: var(--text-muted); }
 
-        /* ── HERO VERTICAL NAME ── */
+        /* СЛОИ: .hero-media (0) -> .hero-motif (1) -> .hero-vertical-name & контент (2) */
+        .hero-media { 
+            position: absolute; 
+            inset: 0; 
+            z-index: 0; 
+            background-color: var(--bg-deep);
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(46, 122, 80, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 90% 80%, rgba(241, 219, 179, 0.08) 0%, transparent 50%);
+        }
+
+        
+        /* ФИРМЕННЫЙ МОТИВ (КОЛЬЦО + ОСЬ) — СМЕЩЕН ВПРАВО */
+        .hero-motif {
+            position: absolute;
+            top: 55%;
+            left: 45%;
+            transform: translate(-50%, -50%);
+            width: clamp(320px, 46vw, 680px);
+            height: clamp(320px, 46vw, 680px);
+            z-index: 1;
+            pointer-events: none;
+            user-select: none;
+            opacity: 0.85;
+        }
+        .hero-motif svg {
+            width: 100%;
+            height: 100%;
+            display: block; /* Гарантирует корректное отображение SVG */
+            animation: slowRotate 140s linear infinite !important; /* !important принудительно возвращает вращение */
+        }
+        @keyframes slowRotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* ВЕРТИКАЛЬНАЯ НАДПИСЬ ASYA KLIO — ТЕПЕРЬ СТРОГО СПРАВА */
         .hero-vertical-name {
             position: absolute;
-            right: clamp(16px,4vw,60px); top: 50%;
+            right: clamp(10px, 2vw, 40px); /* Безопасный отступ от правого края */
+            top: 50%;
             transform: translateY(-50%) rotate(90deg);
             transform-origin: center center;
             font-family: 'Cormorant Garamond', serif;
-            font-size: clamp(3rem,7vw,6rem); font-weight: 400; letter-spacing: 0.25em;
-            color: rgba(241,219,179,0.07);
-            white-space: nowrap; pointer-events: none; user-select: none;
+            
+            /* Снизили размер, чтобы имя гарантированно входило по высоте */
+            font-size: clamp(3.5rem, 7vw, 5.5rem); 
+            font-weight: 500; 
+            
+            /* Сделали межбуквенный интервал компактнее */
+            letter-spacing: 0.15em; 
+            
+            color: transparent; 
+            -webkit-text-stroke: 1px rgba(241, 219, 179, 0.22);
+            white-space: nowrap; 
+            pointer-events: none; 
+            user-select: none;
+            will-change: transform;
+            z-index: 2;
         }
 
-        /* ── HERO SLIDESHOW ── */
-        .hero-media { position: absolute; inset: 0; z-index: 0; overflow: hidden; }
-        .hero-media-item { position: absolute; inset: 0; opacity: 0; transition: opacity 1.2s ease; }
-        .hero-media-item.active { opacity: 1; }
-        .hero-media-item img,
-        .hero-media-item video { width: 100%; height: 100%; object-fit: cover; object-position: center; display: block; }
-        .hero-media::after {
-            content: ''; position: absolute; inset: 0; z-index: 1;
-            background: linear-gradient(to right, rgba(11,28,20,0.92) 0%, rgba(11,28,20,0.6) 55%, rgba(11,28,20,0.3) 100%);
-        }
-        .hero .label, .hero h1, .hero-footer, .hero-vertical-name { position: relative; z-index: 2; }
+        .hero .label, .hero h1, .hero-footer { position: relative; z-index: 2; }
 
         /* ── ABOUT ── */
         .about-inner { display: grid; grid-template-columns: 1fr 1.3fr; gap: clamp(40px,8vw,90px); align-items: center; }
@@ -234,12 +282,22 @@
         /* ── CARD ── */
         .card { display: flex; flex-direction: column; }
         .card-media {
+            position: relative;
             width: 100%; height: 420px; border-radius: var(--radius-card); overflow: hidden;
             background: var(--bg-surface); border: 1px solid var(--white-glass); margin-bottom: 18px;
-            cursor: zoom-in; transition: transform .45s ease, box-shadow .45s ease;
+            cursor: default; transition: transform .45s ease, box-shadow .45s ease;
         }
         .card:hover .card-media { transform: translateY(-6px); box-shadow: 0 24px 48px rgba(46,122,80,0.22); }
         .card-media img, .card-media video { width: 100%; height: 100%; object-fit: cover; object-position: center; display: block; }
+        
+        .zoom-indicator {
+            position: absolute; top: 16px; right: 16px; z-index: 10;
+            padding: 8px 14px; font-size: 0.68rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text);
+            background: rgba(11, 28, 20, 0.7); backdrop-filter: blur(8px); border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 30px; opacity: 0; transform: translateY(-4px); transition: opacity 0.3s ease, transform 0.3s ease; pointer-events: none;
+        }
+        .card-media:hover .zoom-indicator { opacity: 1; transform: translateY(0); cursor: pointer; }
+
         .card-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
         .card-title { font-size: 1.1rem; font-weight: 500; }
         .more-btn {
@@ -248,42 +306,24 @@
             cursor: pointer; padding-bottom: 2px; transition: color .3s, border-color .3s; white-space: nowrap;
         }
         .more-btn:hover { color: var(--text); border-color: var(--text); }
-        .card-details {
-            max-height: 0; overflow: hidden; transition: max-height .4s ease, padding .4s ease;
-            background: rgba(0,0,0,0.18); border-radius: 14px;
-        }
+        .card-details { max-height: 0; overflow: hidden; transition: max-height .4s ease, padding .4s ease; background: rgba(0,0,0,0.18); border-radius: 14px; }
         .card-details.open { max-height: 300px; padding: 20px; border: 1px solid var(--white-glass); }
         .card-details p { font-size: .92rem; line-height: 1.65; color: #D8EDE0; margin-bottom: 14px; }
         .card-link { font-size: .78rem; text-transform: uppercase; letter-spacing: 2px; color: var(--sage); text-decoration: none; font-weight: 500; transition: color .3s; }
         .card-link:hover { color: var(--text); }
 
         /* ── REVIEWS ── */
-        .reviews-wrap {
-            background: rgba(0,0,0,0.22); border: 1px solid var(--white-glass);
-            border-radius: 36px; padding: clamp(40px,8vw,80px); margin-top: 20px; overflow: hidden;
-        }
-        .reviews-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 50px; flex-wrap: wrap; gap: 20px; }
-        .reviews-head h2 { font-size: clamp(2rem,5vw,3.2rem); }
-        .rev-nav { display: flex; gap: 12px; }
-        .rev-btn {
-            width: 48px; height: 48px; border: 1px solid var(--white-line); border-radius: 50%;
-            background: none; color: var(--text); cursor: pointer; font-size: 1rem; transition: background .3s, color .3s;
-        }
-        .rev-btn:hover { background: var(--text); color: var(--bg-deep); }
-        .rev-slider { overflow: hidden; }
-        .rev-track { display: flex; transition: transform .6s cubic-bezier(.25,1,.5,1); }
-        .rev-item { min-width: 100%; display: grid; grid-template-columns: 180px 1fr; gap: 50px; align-items: center; }
-        .rev-client { display: flex; flex-direction: column; align-items: center; text-align: center; }
-        .rev-avatar { width: 100px; height: 100px; border-radius: 50%; overflow: hidden; border: 2px solid var(--white-line); background: var(--bg-surface); margin-bottom: 14px; }
-        .rev-avatar img { width: 100%; height: 100%; object-fit: cover; }
-        .rev-name { font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; margin-bottom: 4px; }
-        .rev-tag { font-size: .7rem; text-transform: uppercase; letter-spacing: 2px; color: var(--sage); }
-        .rev-body { background: var(--white-glass); border: 1px solid rgba(255,255,255,0.04); border-radius: 20px; padding: 40px; position: relative; }
-        .rev-body::before { content: '«'; position: absolute; top: -18px; left: 22px; font-family: 'Cormorant Garamond', serif; font-size: 7rem; color: var(--gold); opacity: 0.15; line-height: 1; }
-        .rev-text { font-size: .97rem; line-height: 1.8; color: #D8EDE0; }
-        .rev-dots { display: flex; justify-content: center; gap: 8px; margin-top: 36px; }
-        .rev-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--white-line); transition: background .3s, transform .3s; cursor: pointer; border: none; }
-        .rev-dot.active { background: var(--gold); transform: scale(1.4); }
+        .reviews { min-height: auto; padding-top: 60px; padding-bottom: 100px; }
+        .reviews-label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 4px; color: var(--sage); display: block; margin-bottom: 48px; }
+        .rev-list { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; border-top: 1px solid var(--white-line); padding-top: 40px; }
+        .rev-quote { display: flex; flex-direction: column; gap: 24px; position: relative; }
+        .rev-quote:not(:last-child)::after { content: ''; position: absolute; right: -20px; top: 0; bottom: 0; width: 1px; background: rgba(255, 255, 255, 0.05); }
+        .rev-who { display: flex; flex-direction: column; gap: 4px; }
+        .rev-who-name { font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; font-weight: 500; color: var(--text); }
+        .rev-who-tag { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--sage); }
+        .rev-body-text { font-family: 'Cormorant Garamond', serif; font-size: 1.35rem; line-height: 1.6; color: #D8EDE0; font-style: italic; font-weight: 400; }
+        .rev-body-text::before { content: '«'; color: var(--gold); margin-right: 4px; font-style: normal; }
+        .rev-body-text::after { content: '»'; color: var(--gold); margin-left: 4px; font-style: normal; }
 
         /* ── CONTACT ── */
         .contact { text-align: center; align-items: center; }
@@ -306,8 +346,7 @@
 
         /* ── LIGHTBOX ── */
         .lightbox {
-            position: fixed; inset: 0; z-index: 99999;
-            background: rgba(6,14,11,0.95);
+            position: fixed; inset: 0; z-index: 99999; background: rgba(6,14,11,0.95);
             display: flex; align-items: center; justify-content: center;
             opacity: 0; visibility: hidden; transition: opacity .35s ease, visibility .35s ease;
         }
@@ -320,17 +359,27 @@
         .lightbox-close:hover { color: var(--text); }
 
         /* ── RESPONSIVE ── */
+        @media (max-width: 1200px) {
+            .hero-vertical-name { font-size: clamp(3.5rem,8vw,6rem); right: 5px; }
+        }
+        @media (max-width: 968px) {
+            .rev-list { grid-template-columns: 1fr; gap: 48px; }
+            .rev-quote:not(:last-child)::after { display: none; }
+            .rev-quote { border-bottom: 1px solid rgba(255, 255, 255, 0.05); padding-bottom: 32px; }
+            .rev-quote:last-child { border-bottom: none; padding-bottom: 0; }
+        }
         @media (max-width: 768px) {
             .about-inner { grid-template-columns: 1fr; text-align: center; }
             .photo-frame { margin: 0 auto; }
-            .rev-item { grid-template-columns: 1fr; gap: 24px; }
             .hero-footer { flex-direction: column; align-items: flex-start; }
             .hero-vertical-name { display: none; }
+            .hero-motif { left: 50%; width: 70vw; height: 70vw; }
         }
         @media (max-width: 500px) {
             .port-grid { grid-template-columns: 1fr; }
             .card-media { height: 300px; }
-            .reviews-wrap { padding: 30px 20px; border-radius: 20px; }
+            .zoom-indicator { display: none; }
+            .hero-motif { width: 290px; height: 290px; }
         }
     </style>
 </head>
@@ -382,12 +431,36 @@
 <!-- SITE -->
 <div class="site" id="site">
 
-    <!-- HERO -->
+    <!-- HERO SECTION -->
     <section class="hero" id="hero">
-        <div class="hero-vertical-name" aria-hidden="true">ASYA KLIO</div>
+        <!-- СЛОЙ 0: Мягкие ИИ градиенты -->
         <div class="hero-media" id="hero-media"></div>
+        
+        <!-- СЛОЙ 1: Фирменный мотив (кольцо + ось) -->
+        <div class="hero-motif" aria-hidden="true">
+            <svg viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <!-- Внешнее кольцо -->
+                <circle cx="200" cy="200" r="180" stroke="rgba(241,219,179,0.12)" stroke-width="0.8"/>
+                <!-- Внутреннее кольцо -->
+                <circle cx="200" cy="200" r="120" stroke="rgba(180,214,188,0.07)" stroke-width="0.5"/>
+                <!-- Вертикальная ось -->
+                <line x1="200" y1="0" x2="200" y2="400" stroke="rgba(241,219,179,0.08)" stroke-width="0.5"/>
+                <!-- Горизонтальная ось -->
+                <line x1="0" y1="200" x2="400" y2="200" stroke="rgba(241,219,179,0.05)" stroke-width="0.5"/>
+                <!-- Точки на осях -->
+                <circle cx="200" cy="20"  r="2.5" fill="none" stroke="rgba(241,219,179,0.25)" stroke-width="0.8"/>
+                <circle cx="200" cy="380" r="2.5" fill="none" stroke="rgba(241,219,179,0.25)" stroke-width="0.8"/>
+                <circle cx="20"  cy="200" r="2.5" fill="none" stroke="rgba(241,219,179,0.15)" stroke-width="0.8"/>
+                <circle cx="380" cy="200" r="2.5" fill="none" stroke="rgba(241,219,179,0.15)" stroke-width="0.8"/>
+            </svg>
+        </div>
+
+        <!-- СЛОЙ 2: Крупный high-fashion контурный заголовок с параллаксом -->
+        <div class="hero-vertical-name" id="hero-name" aria-hidden="true">ASYA KLIO</div>
+        
+        <!-- СЛОЙ 2: Текстовый контент -->
         <div class="label reveal">Portfolio</div>
-        <h1 class="reveal">Создаю визуальные миры, где маркетинг встречает <em>чистое искусство</em> и технологии ИИ</h1>
+        <h1 id="hero-headline">Создаю визуальные миры, где маркетинг встречает <em>чистое искусство</em> и технологии ИИ</h1>
         <div class="hero-footer reveal">
             <p class="hero-desc">Премиальная айдентика, дизайн упаковки и инфографика нового поколения — на стыке человеческого вкуса и нейросетей.</p>
             <span class="hero-scroll">Смотреть работы</span>
@@ -413,7 +486,7 @@
     <!-- PORTFOLIO -->
     <section class="portfolio" id="portfolio">
         <h2 class="reveal">Избранные кейсы</h2>
-        <div class="label reveal">Портфолио</div>
+        <div class="label reveal">Portfolio</div>
 
         <div class="port-category reveal">
             <h3>Книги и сказки</h3>
@@ -430,18 +503,33 @@
             <p class="cat-intro">Оживление статических изображений с помощью технологий ИИ. Тонкая проработка микромимики, эффектов дыма, капель воды и кинематографичного освещения. Премиальный визуальный формат для цифрового искусства и коммерческого промо.</p>
             <div class="port-grid" id="grid-anim"></div>
         </div>
+    </section>
 
-        <!-- REVIEWS -->
-        <div class="reviews-wrap reveal" id="reviews">
-            <div class="reviews-head">
-                <h2>Отзывы</h2>
-                <div class="rev-nav">
-                    <button class="rev-btn" onclick="prevRev()" aria-label="Предыдущий отзыв">←</button>
-                    <button class="rev-btn" onclick="nextRev()" aria-label="Следующий отзыв">→</button>
+    <!-- REVIEWS -->
+    <section class="reviews" id="reviews">
+        <span class="reviews-label reveal">Отзывы</span>
+        <div class="rev-list">
+            <div class="rev-quote reveal">
+                <div class="rev-who">
+                    <span class="rev-who-name">Анна К.</span>
+                    <span class="rev-who-tag">Именная книга</span>
                 </div>
+                <p class="rev-body-text">Я в диком восторге! Это что-то невероятное — один из самых чудесных и памятных подарков. Моему счастью просто нет предела.</p>
             </div>
-            <div class="rev-slider"><div class="rev-track" id="rev-track"></div></div>
-            <div class="rev-dots" id="rev-dots"></div>
+            <div class="rev-quote reveal">
+                <div class="rev-who">
+                    <span class="rev-who-name">Ольга П.</span>
+                    <span class="rev-who-tag">Книга на основе реальных событий</span>
+                </div>
+                <p class="rev-body-text">Нужно лишь кратко сказать базовые критерии — и вот уже в печатном виде у тебя в руках целая история. Изготовление очень быстрое, качество отличное.</p>
+            </div>
+            <div class="rev-quote reveal">
+                <div class="rev-who">
+                    <span class="rev-who-name">Мария Д.</span>
+                    <span class="rev-who-tag">Персонаж-двойник</span>
+                </div>
+                <p class="rev-body-text">Иллюстрации получились очень милыми и узнаваемыми — малыш сразу узнал себя на страницах. Теперь это наша любимая книга для чтения перед сном.</p>
+            </div>
         </div>
     </section>
 
@@ -474,38 +562,19 @@ const animations = [
     { file:'grok_video_2026-06-16-20-01-46.mp4', title:'Кинематографичный портрет',        desc:'Живой взгляд, мягкое дыхание и реалистичные капли летнего дождя — невероятный эффект присутствия.',                              link:'https://t.me/Klio_As5' },
     { file:'grok_video_2026-06-16-20-03-35.mp4', title:'Оживление мимики ИИ',              desc:'Генерация живых портретов с тонкой проработкой микромимики, улыбки и моргания. Идеально для интерактивных книг и диджитал-новелл.', link:'https://t.me/Klio_As5' }
 ];
-const reviews = [
-    { photo:'images/review-avatar1.jpg', name:'Анна К.',   tag:'Именная книга',                   text:'Сегодня мы получили книгу. Я в диком восторге! Это что-то невероятное. Один из самых чудесных и памятных подарков. Ася, спасибо тебе огромное за радость и эмоции, которые ты нам подарила! Моему счастью просто нет предела. Нет ничего лучше, чем книга, а когда она именная и с прекрасными иллюстрациями — это вообще что-то необыкновенное!' },
-    { photo:'images/review-avatar2.jpg', name:'Ольга П.',  tag:'Книга на основе реальных событий', text:'Огромное спасибо за создание такого шедевра! Очень приятно работать с Клио — нужно лишь кратко сказать базовые критерии, и вот уже в печатном виде у тебя в руках целая история. Изготовление очень быстрое, печать качественная, минимум времени тратится на оформление заказа. Клио очень вежливая и тактичная, с таким человеком очень комфортно и приятно работать.' },
-    { photo:'images/review-avatar3.jpg', name:'Мария Д.',  tag:'Персонаж-двойник',                text:'Очаровательная книга с персонажем-двойником! Иллюстрации получились очень милыми и узнаваемыми — малыш сразу узнал себя на страницах! Качество печати отличное, яркие цвета. Сюжет простой и добрый, идеально для детей. Теперь это наша любимая книга для чтения перед сном!' },
-    { photo:'images/review-avatar4.jpg', name:'Ирина Г.',  tag:'Развивающие книги',               text:'Первое, что мы испытали — это восторг! Книга однозначно станет отличным подарком для любого ребёнка. Она не только развлечёт малыша, но и поможет развить воображение и любовь к чтению. Огромное спасибо!' }
-];
 
-/* ── HERO SLIDESHOW ── */
-const heroItems = [
-    { file:'grok_video_2026-06-21-08-52-10.mp4', isVideo:true  },
-    { file:'auris.jpg',                           isVideo:false },
-    { file:'grok_video_2026-06-16-20-01-46.mp4', isVideo:true  },
-    { file:'2.jpg',                               isVideo:false },
-    { file:'grok_video_2026-06-16-20-03-35.mp4', isVideo:true  },
-    { file:'4.jpg',                               isVideo:false },
-];
-const heroEl = document.getElementById('hero-media');
-if (heroEl) {
-    heroEl.innerHTML = heroItems.map((m, i) => {
-        const src = `images/${m.file}`;
-        const inner = m.isVideo
-            ? `<video src="${src}" autoplay muted loop playsinline></video>`
-            : `<img src="${src}" loading="${i===0?'eager':'lazy'}" alt="">`;
-        return `<div class="hero-media-item${i===0?' active':''}">${inner}</div>`;
-    }).join('');
-    let hIdx = 0;
-    const slides = heroEl.querySelectorAll('.hero-media-item');
-    setInterval(() => {
-        slides[hIdx].classList.remove('active');
-        hIdx = (hIdx + 1) % slides.length;
-        slides[hIdx].classList.add('active');
-    }, 4500);
+/* ── PARALLAX: ASYA KLIO ── */
+const heroName = document.getElementById('hero-name');
+window.addEventListener('scroll', () => {
+    if (!heroName) return;
+    const s = Math.min(window.scrollY, 600);
+    heroName.style.transform = `translateY(calc(-50% + ${s * 0.055}px)) rotate(90deg)`;
+}, { passive: true });
+ 
+/* ── HERO HEADLINE ANIMATION ── */
+function animateHeadline() {
+    const h = document.getElementById('hero-headline');
+    if (h) h.classList.add('active');
 }
 
 /* ── RENDER CARDS ── */
@@ -515,9 +584,12 @@ function buildCard(item, gridId, idx) {
     const mediaHtml = isVideo
         ? `<video src="${src}" autoplay muted loop playsinline></video>`
         : `<img src="${src}" alt="${item.title}" loading="lazy">`;
+    const labelText = isVideo ? 'Смотреть видео' : 'Увеличить фото';
+    
     return `
         <div class="card">
             <div class="card-media" onclick="openLightbox('${src}',${isVideo})" role="button" tabindex="0" aria-label="Открыть ${item.title}">
+                <div class="zoom-indicator">${labelText}</div>
                 ${mediaHtml}
             </div>
             <div class="card-row">
@@ -537,31 +609,6 @@ function renderGrid(arr, id) {
 renderGrid(books,      'grid-books');
 renderGrid(marketing,  'grid-marketing');
 renderGrid(animations, 'grid-anim');
-
-/* ── REVIEWS ── */
-const revTrack = document.getElementById('rev-track');
-const revDots  = document.getElementById('rev-dots');
-if (revTrack) revTrack.innerHTML = reviews.map(r => `
-    <div class="rev-item">
-        <div class="rev-client">
-            <div class="rev-avatar"><img src="${r.photo}" alt="${r.name}" onerror="this.src='images/3.jpg'" loading="lazy"></div>
-            <div class="rev-name">${r.name}</div>
-            <div class="rev-tag">${r.tag}</div>
-        </div>
-        <div class="rev-body"><p class="rev-text">${r.text}</p></div>
-    </div>`).join('');
-if (revDots) revDots.innerHTML = reviews.map((_,i) =>
-    `<button class="rev-dot${i===0?' active':''}" onclick="goRev(${i})" aria-label="Отзыв ${i+1}"></button>`).join('');
-
-let revIdx = 0;
-function goRev(n) {
-    revIdx = (n + reviews.length) % reviews.length;
-    if (revTrack) revTrack.style.transform = `translateX(-${revIdx*100}%)`;
-    document.querySelectorAll('.rev-dot').forEach((d,i) => d.classList.toggle('active', i===revIdx));
-}
-function nextRev() { goRev(revIdx+1); }
-function prevRev() { goRev(revIdx-1); }
-if (reviews.length > 1) setInterval(nextRev, 12000);
 
 /* ── DETAILS TOGGLE ── */
 function toggleDetails(id, btn) {
@@ -585,7 +632,6 @@ function openLightbox(src, isVideo) {
 function closeLightbox() { lb.classList.remove('open'); lbVid.pause(); document.body.style.overflow = ''; }
 lb.addEventListener('click', e => { if (e.target===lb) closeLightbox(); });
 document.addEventListener('keydown', e => { if (e.key==='Escape') closeLightbox(); });
-document.addEventListener('keydown', e => { if (e.key==='Enter' && e.target.classList.contains('card-media')) e.target.click(); });
 
 /* ── BURGER ── */
 function toggleMenu() {
@@ -609,6 +655,7 @@ window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.
 function closeIntro() {
     document.getElementById('intro').classList.add('hidden');
     document.getElementById('site').classList.add('visible');
+    animateHeadline(); 
     setTimeout(checkReveal, 200);
 }
 window.addEventListener('DOMContentLoaded', () => {
